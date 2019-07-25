@@ -1,6 +1,5 @@
 import uuid from "uuid";
 import db from "../firebase/firebase";
-import { regExpLiteral } from "@babel/types";
 
 //Summary
 //1. Component calls action generator
@@ -32,15 +31,13 @@ export const startAddExpense = (expenseData = {}) => {
     } = expenseData;
     const expense = { description, note, amount, createdAt };
 
-    return db.ref('expense')
+    return db.ref('expenses')
       .push(expense)
       .then((ref) => {
-        dispatch(
-          addExpense({
+        dispatch(addExpense({
             id: ref.key,
             ...expense
-          })
-        );
+          }));
       });
   };
 };
@@ -57,3 +54,26 @@ export const editExpense = (id, updates) => ({
   id,
   updates
 });
+
+//SET_EXPENSES
+export const setExpenses = (expenses) => ({
+  type: 'SET_EXPENSES',
+  expenses
+});
+
+export const startSetExpenses = () => {
+  return (dispatch) => {
+    return db.ref('expenses').once('value').then((snapshot) => {
+      const expenses = [];
+      
+      snapshot.forEach((childSnapshot) => {
+        expenses.push({
+          id: childSnapshot.key,
+          ...childSnapshot.val()
+        });
+      });
+      dispatch(setExpenses(expenses));  
+    });
+  };
+};
+
