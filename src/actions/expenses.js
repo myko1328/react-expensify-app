@@ -48,12 +48,30 @@ export const removeExpense = ({ id } = {}) => ({
   id //should go to action object to be called in reducer
 });
 
+export const startRemoveExpense = ({ id } ={}) => {
+  return (dispatch) => {
+    return db.ref(`expenses/${id}`).remove().then(() => {
+      dispatch(removeExpense({ id }));
+    });
+  };
+};
+
 //edit_expense
 export const editExpense = (id, updates) => ({
   type: "EDIT_EXPENSE",
   id,
   updates
 });
+
+//setEditExpense
+export const startEditExpense = (id, updates) => {
+  return(dispatch) => {
+    return db.ref(`expenses/${id}`).update(updates)
+      .then(() => {
+        dispatch(editExpense(id, updates));
+      });
+  };
+};
 
 //SET_EXPENSES
 export const setExpenses = (expenses) => ({
