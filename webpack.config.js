@@ -15,7 +15,7 @@ module.exports = (env) => {
     const CSSExtract = new ExtractTextPlugin('styles.css');
 
     return {
-        entry:['@babel/polyfill','./src/app.js'],
+        entry:['babel-polyfill','@babel/polyfill','./src/app.js'],
         // Here the application starts executing
         // and webpack starts bundling
         output: {
